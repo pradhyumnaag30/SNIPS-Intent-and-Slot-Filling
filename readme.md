@@ -57,8 +57,8 @@ All experiments use the **cleaned, leakage-free** dataset.
 The intent preprocessing pipeline includes:
 
 * Whitespace normalization
-* Stratified train–validation split (preserves label distribution)
-* Deduplication within each split
+* Deduplication within Train and Test
+* Stratified train–validation split to preserve label distribution
 * Strict removal of cross-split leakage (train ↔ val ↔ test)
 * Consistent text formatting across all few-shot and full-data settings
 
@@ -146,7 +146,7 @@ Training, subword alignment, and evaluation are implemented directly in the note
 Entity-type variability is substantial due to frequency imbalance:
 
 * High-frequency entities (e.g., `object_type`) → very strong F1
-* Sparse entities (e.g., `genre`) → lower stability in few-shot conditions
+* Sparse entities (e.g., `genre`) → lower stability in comparison
 
 Detailed per-entity breakdown and analysis are available in the notebook.
 
