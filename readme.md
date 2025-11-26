@@ -2,7 +2,7 @@
 
 # **Building Practical Intent Classification and NER Pipelines on the SNIPS Dataset**
 
-This project implements practical, well-structured NLP pipelines on the **SNIPS 2018 Spoken Language Understanding dataset**, focusing on two tasks:
+This project implements practical, well-structured NLP pipelines on the **SNIPS 2018 Spoken Language Understanding dataset**, focusing on two tasks
 
 1. **Intent Classification**
 2. **Slot Filling (NER)**
