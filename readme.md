@@ -1,21 +1,20 @@
----
-
 # **Building Practical Intent Classification and NER Pipelines on the SNIPS Dataset**
 
-This project implements practical, well-structured NLP pipelines on the **SNIPS 2018 Spoken Language Understanding dataset**, focusing on two tasks
+This project implements practical, well-structured NLP pipelines on the **SNIPS 2018 Spoken Language Understanding dataset**, focusing on two tasks, `Intent Classification` and `Slot Filling (NER)`
 
-1. **Intent Classification**
-2. **Slot Filling (NER)**
+# ⭐ **Results Summary**
 
-The notebook is structured — and this README follows the same structure — by covering **Intent Classification first**, then **Slot Filling** as a separate second part.
+* **Completed full SLU pipeline for SNIPS:** intent classification + slot filling
+* **BERT-based Intent Classifier:** 98.56% accuracy
+* **DistilBERT-based NER:** 94.5% entity-level F1
+* **Few-shot performance:** ~97.8% accuracy with ~70 samples per intent
+* **Includes:** preprocessing, leakage-safe dataset splits, tokenizer setup, training loops, evaluation, and error analysis.
 
----
 # **Dataset Citation**
 
 > Coucke A. et al., “Snips Voice Platform: an embedded spoken language understanding system for private-by-design voice interfaces.” 2018.
 > [https://arxiv.org/abs/1805.10190](https://arxiv.org/abs/1805.10190)
 
----
 # **Dataset Overview**
 
 The SNIPS dataset contains user utterances annotated for two SLU tasks:
@@ -40,7 +39,7 @@ Utterances contain entity spans such as:
 
 Entity frequencies are **very imbalanced** (e.g., `object_type`: 3341 vs `genre`: 147), which heavily influences NER difficulty.
 
----
+
 # **PART I — Intent Classification**
 
 ## **1. Summary**
@@ -58,7 +57,7 @@ All experiments use the **cleaned, leakage-free** dataset.
 * **97.84% accuracy** with only 100 samples/intent
 * Detailed shot-by-shot table below
 
----
+
 ## **2. Data Cleaning & Preprocessing**
 
 The intent preprocessing pipeline includes:
@@ -79,11 +78,11 @@ This ensures clean, balanced, leakage-free evaluation across all experiments.
 * **Inputs:** Cleaned, tokenized utterances (max length = 44)
 * **Evaluation:** Accuracy, weighted F1, confusion matrix, error analysis
 
----
+
 ## **4. Results**
 
 | Training Size | Accuracy | Weighted F1 | Errors (out of 697) |
-| ------------- | -------- | ----------- | ------------------- |
+| - | -- | -- | - |
 | **10-shot**   | 82.21%   | 81.13%      | 124                 |
 | **20-shot**   | 95.69%   | 95.66%      | 30                  |
 | **50-shot**   | 96.70%   | 96.72%      | 23                  |
@@ -103,7 +102,7 @@ This ensures clean, balanced, leakage-free evaluation across all experiments.
   * *SearchCreativeWork* ↔ *SearchScreeningEvent*
 * A small set of utterances is genuinely ambiguous/underspecified.
 
----
+
 # **PART II — Slot Filling (NER)**
 
 ## **1. Summary**
@@ -119,7 +118,7 @@ Core focus:
 **NER Result (entity-level F1):**
 **94.54%**
 
----
+
 ## **2. Data Cleaning & Preprocessing (NER)**
 
 The NER preprocessing pipeline includes:
@@ -133,7 +132,7 @@ The NER preprocessing pipeline includes:
 
 This creates clean word-level BIO labels ready for subword alignment during tokenization.
 
----
+
 ## **3. Modeling**
 
 * **Model:** DistilBERT (fine-tuned end-to-end)  
@@ -145,7 +144,7 @@ This creates clean word-level BIO labels ready for subword alignment during toke
 
 Training, subword alignment, and evaluation are implemented directly in the notebook using HuggingFace's `Trainer`.
 
----
+
 ## **4. Results**
 
 * **Entity-level F1:** **94.54%**
@@ -157,7 +156,7 @@ Entity-type variability is substantial due to frequency imbalance:
 
 Detailed per-entity breakdown and analysis are available in the notebook.
 
----
+
 # **How to Use This Repository**
 
 1. **Install dependencies**
@@ -189,7 +188,7 @@ Execute notebooks **in order**:
 07_build_snips_ner_dataset.ipynb  
 08_train_and_evaluate_full_ner.ipynb  
 09_evaluate_ner.ipynb  
-10_prototype_ner.ipynb   (if present)
+10_prototype_ner.ipynb
 ```
 
 This constructs the NER dataset (BIO word-level), aligns labels to subwords, trains DistilBERT, and evaluates using entity-level F1.
