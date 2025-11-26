@@ -51,12 +51,6 @@ This section covers the **intent classification pipeline** using **BERT-base**, 
 
 All experiments use the **cleaned, leakage-free** dataset.
 
-**Top-level results :**
-
-* **98.56% accuracy** on the full dataset
-* **97.84% accuracy** with only 100 samples/intent
-* Detailed shot-by-shot table below
-
 
 ## **2. Data Cleaning & Preprocessing**
 
