@@ -4,11 +4,11 @@ This project implements practical, well-structured NLP pipelines on the **SNIPS 
 
 # ⭐ **Results Summary**
 
-* **Completed full SLU pipeline for SNIPS:** intent classification + slot filling
-* **BERT-based Intent Classifier:** 98.56% accuracy
-* **DistilBERT-based NER:** 94.5% entity-level F1
-* **Few-shot performance:** ~97.8% accuracy with ~70 samples per intent
-* **Includes:** preprocessing, leakage-safe dataset splits, tokenizer setup, training loops, evaluation, and error analysis.
+| Task                 | Model              | Metric                     | Score     |
+|----------------------|--------------------|---------------------------|-----------|
+| Intent Classification| BERT-base          | Accuracy                  | **98.56%**|
+| Slot Filling (NER)   | DistilBERT         | Entity-level F1           | **94.54%** |
+| Few-shot Intent (≈70 samples/intent) | BERT-base         | Accuracy | **97.84%**|
 
 # **Dataset Citation**
 
