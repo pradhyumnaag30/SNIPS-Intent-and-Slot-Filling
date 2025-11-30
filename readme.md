@@ -12,6 +12,10 @@ This project implements practical, well-structured NLP pipelines on the **SNIPS 
 
 # **Dataset Citation**
 
+> [SONOS NLU Benchmark - GitHub](https://github.com/sonos/nlu-benchmark)
+
+# **Introductory Paper**
+
 > Coucke A. et al., “Snips Voice Platform: an embedded spoken language understanding system for private-by-design voice interfaces.” 2018.
 > [https://arxiv.org/abs/1805.10190](https://arxiv.org/abs/1805.10190)
 
