@@ -25,8 +25,9 @@ The SNIPS dataset contains user utterances annotated for two SLU tasks:
 
 ### **1. Intent Classification**
 
+* 13784 instances for `train` and 700 instances for `test`.
 * 7 intent labels
-* Well-Balanced
+* Highly balanced
 * Each utterance has exactly one intent
   (e.g., `BookRestaurant`, `SearchCreativeWork`, `PlayMusic`, etc.)
 
