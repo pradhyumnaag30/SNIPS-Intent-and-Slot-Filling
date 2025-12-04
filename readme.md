@@ -1,6 +1,13 @@
 # **Building Practical Intent Classification and NER Pipelines on the SNIPS Dataset**
 
-This project implements practical, well-structured NLP pipelines on the **SNIPS 2018 Spoken Language Understanding dataset**, focusing on two tasks, `Intent Classification` and `Slot Filling (NER)`.
+This project evaluates the **SNIPS 2018 Spoken Language Understanding (SLU) dataset**, a benchmark built for modeling natural user commands in voice-assistant applications. SNIPS contains short, task-oriented utterances covering everyday assistant use cases such as playing music, adding items to playlists, booking restaurants, rating books, and retrieving weather information.
+
+The project focuses on the two core components of SLU systems:
+
+* **Intent Classification** — identifying the user's goal (e.g., *PlayMusic*, *BookRestaurant*, *GetWeather*)
+* **Slot Filling (NER)** — extracting key arguments from the utterance (e.g., *artist*, *restaurant name*, *location*)
+
+Beyond baseline modeling, the project emphasizes **dataset cleanup, duplicate removal, leakage-free train/val/test splits, and reproducible few-shot experiments**, reflecting the constraints of building reliable, real-world assistant pipelines.
 
 # ⭐ **Results Summary**
 
@@ -62,12 +69,13 @@ All experiments use the **cleaned, leakage-free** dataset.
 The intent preprocessing pipeline includes:
 
 * Whitespace normalization
-* Deduplication within Train and Test
+* Removal of internal duplicates within each split (train/val/test)
+* Removal of cross-split duplicates to prevent leakage (train ↔ val ↔ test)
 * Stratified train–validation split to preserve label distribution
-* Strict removal of cross-split leakage (train ↔ val ↔ test)
 * Consistent text formatting across all few-shot and full-data settings
 
 This ensures clean, balanced, leakage-free evaluation across all experiments.
+
 ## **3. Modeling Approach**
 
 * **Model:** BERT-base (fine-tuned end-to-end)
@@ -106,54 +114,46 @@ This ensures clean, balanced, leakage-free evaluation across all experiments.
 
 ## **1. Summary**
 
-This section implements the **slot filling (entity recognition)** pipeline using BERT-base with BIO tagging.
+Slot filling extracts key arguments from user commands (e.g., *artist*, *track*, *restaurant name*, *location*), making it the component that turns an intent into an actionable request. The SNIPS dataset provides entity spans at the character level, requiring careful reconstruction, tagging, and subword alignment.
 
-Core focus:
+This project builds a clean, reproducible slot-filling pipeline using DistilBERT with BIO tagging, achieving an **entity-level F1 of 94.54%**.
 
-* Correct subword → label alignment
-* Clean handling of tokenization drift
-* Reliable entity-level evaluation
+## **2. Data Cleaning & Preprocessing**
 
-**NER Result (entity-level F1):**
-**94.54%**
+SNIPS provides character-level entity spans inside JSON files, which are not directly usable for NER.
+Entity frequencies are also **highly imbalanced** (e.g., `object_type`: 3341 occurrences vs. `genre`: 147), making it important to preserve rare entity spans accurately during reconstruction.
 
+To produce a clean, consistent BIO-tagged dataset, the pipeline performs:
 
-## **2. Data Cleaning & Preprocessing (NER)**
-
-The NER preprocessing pipeline includes:
-
-* Reconstructing full utterances from SNIPS JSON files
-* Extracting character-level entity spans from the original annotations
-* Performing whitespace-based tokenization
-* Converting entity spans into **BIO word-level tags**
-* Applying a stratified train–validation split by intent
+* Rebuilding full utterances from raw JSON
+* Converting character-level spans into word-level BIO tags
+* Handling whitespace inconsistencies and unnamed tokens
+* Performing a **stratified train–validation split by intent** to retain intent diversity
 * Ensuring consistent formatting across train/validation/test sets
 
-This creates clean word-level BIO labels ready for subword alignment during tokenization.
+This produces a **clean, word-aligned BIO dataset** suitable for BERT-style subword tokenization.
 
+## **3. Modeling Approach**
 
-## **3. Modeling**
+* **Model:** DistilBERT fine-tuned for token classification
+* **Labeling scheme:** BIO tags aligned to subword tokens
+* **Subword alignment:** labels expanded to all wordpiece tokens
+* **Loss masking:** `-100` used for padding and special tokens
+* **Optimization:** AdamW, linear LR schedule, warmup, early stopping
+* **Evaluation:** Entity-level F1 using `seqeval` - chosen because entity frequencies in SNIPS are highly imbalanced, making accuracy uninformative. Token-level accuracy is reported only as a secondary reference.
 
-* **Model:** DistilBERT (fine-tuned end-to-end)  
-* **Head:** Token-classification layer over subword tokens  
-* **Labeling scheme:** BIO tags aligned to subword tokens  
-* **Training:** AdamW optimizer, linear LR scheduler, warmup, early stopping  
-* **Masking:** `-100` used to ignore special and padded tokens  
-* **Evaluation:** Entity-level F1 using `seqeval`, with token-level accuracy as an auxiliary metric
-
-Training, subword alignment, and evaluation are implemented directly in the notebook using HuggingFace's `Trainer`.
-
+The entire system is implemented using HuggingFace’s `Trainer`, with explicit control over alignment and masking logic.
 
 ## **4. Results**
 
 * **Entity-level F1:** **94.54%**
 
-Entity-type variability is substantial due to frequency imbalance:
+Performance varies across entity types due to SNIPS’ natural imbalance:
 
-* High-frequency entities (e.g., `object_type`) → very strong F1
-* Sparse entities (e.g., `genre`) → lower stability in comparison
+* **High-frequency entities** (e.g., `object_type`, `playlist`) → strong and stable F1
+* **Sparse entities** (e.g., `genre`, `service`) → lower stability and wider variance
 
-Detailed per-entity breakdown and analysis are available in the notebook.
+A complete per-entity breakdown and failure analysis are provided in the notebook.
 
 
 # **How to Use This Repository**
